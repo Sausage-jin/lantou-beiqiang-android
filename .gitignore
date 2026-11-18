@@ -1,0 +1,21 @@
+# Android SDK 工具链(体积过大,不纳入版本控制)
+sdk/
+
+# 构建产物
+build/
+
+# IDE 配置目录
+.joycode/
+.workbuddy/
+*.genie
+
+# 签名附属文件
+*.idsig
+
+# 临时文件
+*.temp/
+temp/
+
+# 系统文件
+Thumbs.db
+.DS_Store
