@@ -1,4 +1,6 @@
 # Lantou Beiqiang (烂头背枪) — Android Card Strategy Game
+<img width="1920" height="1080" alt="宣传图_烂头背枪_1920x1080" src="https://github.com/user-attachments/assets/3f83920f-c1bb-48d4-96ad-2ec4ee59f7c8" />
+
 
 **English** | [中文](#中文)
 
