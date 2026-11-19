@@ -101,6 +101,21 @@ public final class UI {
         // 注意：decodeStream 返回 null 表示解码失败，调用方已判空
     }
 
+    /** 从 assets 读取背景大图：原尺寸 + ARGB_8888 高色深 + 抖动。
+     *  RGB_565 只有 16bit 色深，渐变区会产生明显色带，放大后显得"糊"；
+     *  32bit + 双线性插值 + 抖动可显著改善观感。 */
+    public static Bitmap assetBitmapHq(Context c, String path) {
+        try {
+            InputStream is = c.getAssets().open(path);
+            BitmapFactory.Options opt = new BitmapFactory.Options();
+            opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
+            opt.inDither = true;
+            Bitmap b = BitmapFactory.decodeStream(is, null, opt);
+            is.close();
+            return b;
+        } catch (Throwable e) { return null; }
+    }
+
     /** 圆形图标按钮（说明/音乐），带金色着色 */
     public static ImageButton iconButton(Context c, String asset, View.OnClickListener l, int sizeDp) {
         ImageButton ib = new ImageButton(c);

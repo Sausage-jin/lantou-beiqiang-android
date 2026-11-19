@@ -82,25 +82,37 @@ public class MainActivity extends Activity {
         bottom.setGravity(Gravity.RIGHT);
         bottom.setLayoutParams(new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.BOTTOM));
-        bottom.setPadding(0, 0, 24, 20);
+        bottom.setPadding(0, 0, (int) (16 * dp), (int) (12 * dp));
         bottom.addView(UI.iconButton(this, "shuoming.png", new View.OnClickListener() {
             public void onClick(View v) { GameSound.click(); UI.showRules(MainActivity.this); }
-        }, 44));
+        }, 28));
         final ImageButton musicBtn = UI.iconButton(this, "music.png", new View.OnClickListener() {
             public void onClick(View v) {
                 GameSound.setMusicOn(!GameSound.isMusicOn());
                 GameSound.click();
                 UI.toast(MainActivity.this, GameSound.isMusicOn() ? "音乐开" : "音乐关");
             }
-        }, 44);
+        }, 28);
         bottom.addView(musicBtn);
         root.addView(bottom);
 
         setContentView(root);
         UI.immersive(this);   // 沉浸式全屏：20:9 长屏铺满整块屏幕
         showMain();
-        GameSound.startBgm();
         showCrashLogIfAny();
+    }
+
+    /** BGM 生命周期跟随前后台切换：onResume 恢复、onPause 暂停。
+     *  跳转 GameActivity 时先暂停、再由 GameActivity.onResume 立即恢复，无缝衔接；
+     *  退到桌面时自动暂停；主页被系统回收也不会误停游戏中的音乐。 */
+    @Override protected void onResume() {
+        super.onResume();
+        GameSound.startBgm();
+    }
+
+    @Override protected void onPause() {
+        super.onPause();
+        GameSound.stopBgm();
     }
 
     /** 弹窗等操作会使 IMMERSIVE_STICKY 退出，重新获得焦点时再次隐藏系统栏 */
@@ -132,10 +144,9 @@ public class MainActivity extends Activity {
         View bgView = new View(this) {
             @Override protected void onDraw(Canvas cv) {
                 super.onDraw(cv);
-                // 懒加载 + 缓存：首次绘制时按屏幕尺寸降采样解码，之后复用
+                // 懒加载 + 缓存：首次绘制时按 ARGB_8888 原尺寸解码（避免 RGB_565 色带导致模糊），之后复用
                 if (bgBitmap == null) {
-                    bgBitmap = UI.assetBitmapScaled(getContext(), "bg.png",
-                            getWidth(), getHeight());
+                    bgBitmap = UI.assetBitmapHq(getContext(), "bg.png");
                 }
                 if (bgBitmap != null) {
                     float s = Math.max((float) getWidth() / bgBitmap.getWidth(),
@@ -315,7 +326,6 @@ public class MainActivity extends Activity {
 
     @Override protected void onDestroy() {
         super.onDestroy();
-        GameSound.stopBgm();
         if (bgBitmap != null) { bgBitmap.recycle(); bgBitmap = null; }
     }
 }

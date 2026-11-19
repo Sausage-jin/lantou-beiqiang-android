@@ -87,10 +87,17 @@ public final class GameSound {
     public static void win()      { play("game-win"); }
     public static void lose()     { play("game-lose"); }
 
-    /** 播放主页背景音乐（循环）。异步准备，避免 22MB 文件阻塞主线程。 */
+    /** 播放背景音乐（循环）。若已有实例则直接恢复（pause→start 无缝衔接），
+     *  避免每次 Activity 切换都重新加载 22MB 文件造成 0.5~1s 断音。
+     *  首次加载仍用异步准备，不阻塞主线程。 */
     public static void startBgm() {
         if (!musicOn || ctx == null) return;
-        stopBgm();
+        if (bgm != null) {
+            try {
+                if (!bgm.isPlaying()) bgm.start();
+                return;
+            } catch (Exception e) { stopBgm(); }   // 实例已失效则走重建流程
+        }
         try {
             final MediaPlayer mp = new MediaPlayer();
             boolean loaded = false;
@@ -122,10 +129,10 @@ public final class GameSound {
         }
     }
 
+    /** 暂停背景音乐（保留实例，下次 startBgm 可立即恢复，无需重新加载） */
     public static void stopBgm() {
         if (bgm != null) {
-            try { bgm.stop(); bgm.release(); } catch (Exception e) { }
-            bgm = null;
+            try { bgm.pause(); } catch (Exception e) { }
         }
     }
 

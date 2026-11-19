@@ -42,23 +42,24 @@ public class GameActivity extends Activity {
         root.setOrientation(LinearLayout.VERTICAL);
         root.setBackgroundColor(0xFF141822);
 
-        // 顶栏：回合 + 状态 + 错误提示
+        // 顶栏：回合 + 状态 + 错误提示（紧凑，把更多空间留给棋盘）
+        float dp = getResources().getDisplayMetrics().density;
         LinearLayout top = new LinearLayout(this);
         top.setOrientation(LinearLayout.VERTICAL);
-        top.setPadding(16, 24, 16, 10);
+        top.setPadding((int)(12*dp), (int)(8*dp), (int)(12*dp), (int)(4*dp));
         top.setBackgroundColor(0xFF1E2230);
         turnLabel = new TextView(this);
-        turnLabel.setTextSize(16);
+        turnLabel.setTextSize(14);
         turnLabel.setGravity(Gravity.CENTER);
         turnLabel.setTextColor(UI.GOLD);
         top.addView(turnLabel);
         statusLabel = new TextView(this);
-        statusLabel.setTextSize(13);
+        statusLabel.setTextSize(11);
         statusLabel.setGravity(Gravity.CENTER);
         statusLabel.setTextColor(0xFFB0B6C4);
         top.addView(statusLabel);
         errorLabel = new TextView(this);
-        errorLabel.setTextSize(13);
+        errorLabel.setTextSize(11);
         errorLabel.setGravity(Gravity.CENTER);
         errorLabel.setTextColor(0xFFFF6060);
         top.addView(errorLabel);
@@ -76,11 +77,11 @@ public class GameActivity extends Activity {
         root.addView(board, new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f));
 
-        // 底栏：返回 / 规则 / 认输
+        // 底栏：返回 / 规则 / 认输（紧凑）
         LinearLayout bottom = new LinearLayout(this);
         bottom.setOrientation(LinearLayout.HORIZONTAL);
         bottom.setGravity(Gravity.CENTER);
-        bottom.setPadding(8, 12, 8, 24);
+        bottom.setPadding((int)(8*dp), (int)(5*dp), (int)(8*dp), (int)(8*dp));
         bottom.setBackgroundColor(0xFF1E2230);
         bottom.addView(UI.topButton(this, "返回", new View.OnClickListener() {
             public void onClick(View v) { GameSound.click(); finish(); }
@@ -105,6 +106,18 @@ public class GameActivity extends Activity {
     @Override public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         if (hasFocus) UI.immersive(this);
+    }
+
+    /** BGM 跟随前后台：进入游戏恢复（与主页共用同一 MediaPlayer，无缝衔接），
+     *  退到桌面/返回主页时暂停。 */
+    @Override protected void onResume() {
+        super.onResume();
+        GameSound.startBgm();
+    }
+
+    @Override protected void onPause() {
+        super.onPause();
+        GameSound.stopBgm();
     }
 
     // ==================== 交互判定 ====================

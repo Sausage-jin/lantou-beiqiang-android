@@ -32,6 +32,7 @@ public class BoardView extends View {
     private final Paint paintImg = new Paint(Paint.FILTER_BITMAP_FLAG);
     private final Path pathReuse = new Path();
     private final RectF rectReuse = new RectF();
+    private final Rect srcReuse = new Rect();
     // 触摸：记录按下时的格子，抬起时用按下位置判定，手指微移不影响
     private int downRow = -1, downCol = -1;
 
@@ -110,8 +111,8 @@ public class BoardView extends View {
 
     private void drawBoard(Canvas cv) {
         int w = getWidth(), h = getHeight();
-        // 棋盘区域：略留边距，保持 3:5 竖长比例
-        float padX = w * 0.06f, padY = h * 0.02f;
+        // 棋盘区域：极小边距，尽量铺满（卡牌大小主要由屏幕高度决定）
+        float padX = w * 0.02f, padY = h * 0.005f;
         float availW = w - padX * 2, availH = h - padY * 2;
         float cellW = Math.min(availW / GameLogic.COLS, availH / GameLogic.ROWS * 0.66f);
         float cellH = cellW * 1.5f;
@@ -149,8 +150,8 @@ public class BoardView extends View {
         String key = red + "_" + cw + "_" + ch;
         RadialGradient rg = glowCache.get(key);
         if (rg == null) {
-            int glow = red ? 0x66FF4B4B : 0x664B7BFF;
-            rg = new RadialGradient(cx, cy, Math.max(cw, ch) * 0.62f,
+            int glow = red ? 0x40FF4B4B : 0x404B7BFF;   // 减弱泛光（原 0x66 过浓）
+            rg = new RadialGradient(cx, cy, Math.max(cw, ch) * 0.55f,
                     new int[]{glow, 0x00000000}, null, Shader.TileMode.CLAMP);
             glowCache.put(key, rg);
         }
@@ -171,7 +172,7 @@ public class BoardView extends View {
         }
         paintStroke.setColor(edge);
         paintStroke.setStyle(Paint.Style.STROKE);
-        paintStroke.setStrokeWidth(4);
+        paintStroke.setStrokeWidth(2);   // 细边框（原 4 过粗）
         cv.drawRoundRect(rectReuse, 11, 11, paintStroke);
     }
 
@@ -187,12 +188,16 @@ public class BoardView extends View {
             pathReuse.reset();
             pathReuse.addRoundRect(rectReuse, 11, 11, Path.Direction.CW);
             cv.clipPath(pathReuse);
-            cv.drawBitmap(img, null, rectReuse, paintImg);
+            // 裁掉卡牌图四周约12%的浅色装饰边，主体内容放大约1.3倍填满格子
+            int iw = img.getWidth(), ih = img.getHeight();
+            int cx = (int)(iw * 0.12f), cy = (int)(ih * 0.12f);
+            srcReuse.set(cx, cy, iw - cx, ih - cy);
+            cv.drawBitmap(img, srcReuse, rectReuse, paintImg);
             cv.restore();
         }
         paintStroke.setColor(card.getOwner() == 1 ? EDGE_RED : EDGE_BLU);
         paintStroke.setStyle(Paint.Style.STROKE);
-        paintStroke.setStrokeWidth(4);
+        paintStroke.setStrokeWidth(2);   // 细边框（原 4 过粗）
         cv.drawRoundRect(rectReuse, 11, 11, paintStroke);
 
         // 弹出动画缩放高亮
@@ -235,7 +240,7 @@ public class BoardView extends View {
     /** 由手势坐标换算行列 */
     private int[] cellAt(float px, float py) {
         int w = getWidth(), h = getHeight();
-        float padX = w * 0.06f, padY = h * 0.02f;
+        float padX = w * 0.02f, padY = h * 0.005f;
         float availW = w - padX * 2, availH = h - padY * 2;
         float cellW = Math.min(availW / GameLogic.COLS, availH / GameLogic.ROWS * 0.66f);
         float cellH = cellW * 1.5f;
