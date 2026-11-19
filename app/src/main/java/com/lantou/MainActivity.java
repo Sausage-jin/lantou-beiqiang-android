@@ -42,7 +42,7 @@ public class MainActivity extends Activity {
         // 尺寸统一用 dp 换算，高密度手机上不会显示太小
         float dp = getResources().getDisplayMetrics().density;
         TextView title = new TextView(this);
-        title.setText("烂头背枪");
+        title.setText("烂头打虎");
         title.setTextSize(40);
         title.setTextColor(UI.GOLD);
         title.setTypeface(Typeface.DEFAULT_BOLD);

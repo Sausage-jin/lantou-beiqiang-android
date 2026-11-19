@@ -1,5 +1,5 @@
-# Lantou Beiqiang (烂头背枪) — Android Card Strategy Game
-<img width="1920" height="1080" alt="宣传图_烂头背枪_1920x1080" src="https://github.com/user-attachments/assets/3f83920f-c1bb-48d4-96ad-2ec4ee59f7c8" />
+# Lantou Dahu (烂头打虎) — Android Card Strategy Game
+<img width="1920" height="1080" alt="宣传图_烂头打虎_1920x1080" src="https://github.com/user-attachments/assets/3f83920f-c1bb-48d4-96ad-2ec4ee59f7c8" />
 
 
 **English** | [中文](#中文)
@@ -10,7 +10,7 @@
 
 ### Overview
 
-**Lantou Beiqiang** (烂头背枪) is a native Android implementation of a Chinese folk-inspired card strategy board game. Two players (Red and Blue) each command 6 face-down cards on a 5×3 grid, battling through a single-direction counter ring until one side prevails.
+**Lantou Dahu** (烂头打虎) is a native Android implementation of a Chinese folk-inspired card strategy board game. Two players (Red and Blue) each command 6 face-down cards on a 5×3 grid, battling through a single-direction counter ring until one side prevails.
 
 Built with **100% native Android Java** — no third-party libraries, no XML layouts, no Gradle build dependencies. The entire UI is programmatic, the board is custom-rendered via Canvas, and the game ships as a single APK.
 
@@ -237,7 +237,7 @@ adb install lantou.apk
 ### Project Structure
 
 ```
-lantou-beiqiang-android/
+lantou-dahu-android/
 ├── app/src/main/
 │   ├── AndroidManifest.xml
 │   ├── assets/
@@ -257,7 +257,7 @@ lantou-beiqiang-android/
 
 ### 项目简介
 
-**烂头背枪**是一款基于中国民间棋牌玩法的 Android 原生卡牌策略游戏。红蓝双方各持 6 张暗牌,在 5×3 的棋盘上排兵布阵,通过单向相克环吃掉对方棋子,直至一方获胜。
+**烂头打虎**是一款基于中国民间棋牌玩法的 Android 原生卡牌策略游戏。红蓝双方各持 6 张暗牌,在 5×3 的棋盘上排兵布阵,通过单向相克环吃掉对方棋子,直至一方获胜。
 
 项目采用 **100% 原生 Android Java** 开发——无任何第三方依赖库、无 XML 布局、无 Gradle 构建依赖。所有 UI 均由代码动态创建,棋盘通过 Canvas 自定义绘制,最终打包为单个 APK。
 
@@ -483,7 +483,7 @@ adb install lantou.apk
 ### 项目结构
 
 ```
-lantou-beiqiang-android/
+lantou-dahu-android/
 ├── app/src/main/
 │   ├── AndroidManifest.xml
 │   ├── assets/
